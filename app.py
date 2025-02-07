@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import numpy as np
 import tensorflow as tf
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Hide TensorFlow warnings
 
 # Load the trained LSTM model
 model = tf.keras.models.load_model("traffic_forecast_model.h5")
@@ -31,4 +33,5 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))  # Use Render's assigned port
+    app.run(host="0.0.0.0", port=port, debug=True)
